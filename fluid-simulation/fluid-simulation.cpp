@@ -4,7 +4,7 @@ int main()
 {
     sf::RenderWindow window(sf::VideoMode(SIZE * SCALE, SIZE * SCALE), "Fluid Simulation");
 
-    FluidField fluidField{ SIZE, 0.01f, 0, 0};
+    FluidField fluidField{ SIZE, 0.01f, 0.f, 0.f};
 
     sf::Vector2i currentPosition = sf::Mouse::getPosition(window);
     sf::Vector2i previousPosition = currentPosition;
@@ -33,7 +33,7 @@ int main()
 
         fluidField.update();
 
-        window.clear();
+        window.clear(sf::Color::Cyan);
 
         fluidField.fade();
         fluidField.render(window);

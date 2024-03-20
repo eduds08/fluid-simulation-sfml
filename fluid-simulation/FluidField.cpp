@@ -1,11 +1,11 @@
 #include "FluidField.h"
 
-FluidField::FluidField(int size, float dt, int diffusion, int viscosity)
+FluidField::FluidField(int size, float dt, float diffusion, float viscosity)
 {
     m_size = size;
     m_dt = dt;
-    m_diff = static_cast<float>(diffusion);
-    m_visc = static_cast<float>(viscosity);
+    m_diff = diffusion;
+    m_visc = viscosity;
 
     for (int i = 0; i < size * size; ++i)
     {
@@ -170,17 +170,17 @@ void FluidField::advect(int b, std::vector<float>& d, std::vector<float>& d0, st
 
 void FluidField::update()
 {
-    diffuse(1, m_Vx0, m_Vx, m_visc, 4);
-    diffuse(2, m_Vy0, m_Vy, m_visc, 4);
+    diffuse(1, m_Vx0, m_Vx, m_visc, ITER);
+    diffuse(2, m_Vy0, m_Vy, m_visc, ITER);
 
-    project(m_Vx0, m_Vy0, m_Vx, m_Vy, 4);
+    project(m_Vx0, m_Vy0, m_Vx, m_Vy, ITER);
 
     advect(1, m_Vx, m_Vx0, m_Vx0, m_Vy0);
     advect(2, m_Vy, m_Vy0, m_Vx0, m_Vy0);
 
-    project(m_Vx, m_Vy, m_Vx0, m_Vy0, 4);
+    project(m_Vx, m_Vy, m_Vx0, m_Vy0, ITER);
 
-    diffuse(0, m_s, m_density, m_diff, 4);
+    diffuse(0, m_s, m_density, m_diff, ITER);
     advect(0, m_density, m_s, m_Vx, m_Vy);
 }
 
@@ -197,7 +197,7 @@ void FluidField::render(sf::RenderWindow& window)
 
             m_shape.setPosition(x, y);
 
-            m_shape.setFillColor(sf::Color{ 255, 255, 255, static_cast<sf::Uint8>(d) });
+            m_shape.setFillColor(sf::Color{ 0, 255, 0, static_cast<sf::Uint8>(d) });
 
             window.draw(m_shape);
         }
@@ -211,6 +211,6 @@ void FluidField::fade()
         float d = m_density[i];
         if (d < 0.f) d = 0.f;
         if (d > 255.f) d = 255.f;
-        m_density[i] = d - 0.01f;
+        m_density[i] = d - FADE;
     }
 }

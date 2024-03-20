@@ -11,7 +11,7 @@ class FluidField
 {
 public:
 
-    FluidField(int size, float dt, int diffusion, int viscosity);
+    FluidField(int size, float dt, float diffusion, float viscosity);
     ~FluidField() {}
 
     void addDensity(int x, int y, float amount);
